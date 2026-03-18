@@ -1,0 +1,506 @@
+{
+  "address": "9YqBRvxkBv7N2RPzEnAdUi4VUVxZB1aukK4sTio5QWha",
+  "metadata": {
+    "name": "clone_guard",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "CloneGuard - Blockchain based APK authenticity verification"
+  },
+  "instructions": [
+    {
+      "name": "register_app",
+      "discriminator": [
+        5,
+        248,
+        20,
+        126,
+        12,
+        159,
+        9,
+        242
+      ],
+      "accounts": [
+        {
+          "name": "app_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  112,
+                  112
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "apk_hash"
+              }
+            ]
+          }
+        },
+        {
+          "name": "developer_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  118,
+                  101,
+                  108,
+                  111,
+                  112,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "developer"
+              }
+            ]
+          }
+        },
+        {
+          "name": "developer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "apk_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "app_name",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "string"
+        },
+        {
+          "name": "signature",
+          "type": {
+            "array": [
+              "u8",
+              64
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "report_clone",
+      "discriminator": [
+        99,
+        143,
+        25,
+        103,
+        153,
+        93,
+        23,
+        102
+      ],
+      "accounts": [
+        {
+          "name": "clone_report",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  112,
+                  111,
+                  114,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "reporter"
+              },
+              {
+                "kind": "arg",
+                "path": "reported_hash"
+              }
+            ]
+          }
+        },
+        {
+          "name": "genuine_app",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  112,
+                  112
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "genuine_app.apk_hash",
+                "account": "AppRegistry"
+              }
+            ]
+          }
+        },
+        {
+          "name": "reporter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "reported_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "description",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "update_app",
+      "discriminator": [
+        126,
+        189,
+        95,
+        214,
+        18,
+        25,
+        42,
+        176
+      ],
+      "accounts": [
+        {
+          "name": "app_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  112,
+                  112
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "apk_hash"
+              }
+            ]
+          }
+        },
+        {
+          "name": "developer",
+          "signer": true,
+          "relations": [
+            "app_registry"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "apk_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "new_version",
+          "type": "string"
+        },
+        {
+          "name": "is_active",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "verify_app",
+      "discriminator": [
+        96,
+        168,
+        52,
+        166,
+        191,
+        211,
+        101,
+        23
+      ],
+      "accounts": [
+        {
+          "name": "app_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  112,
+                  112
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "apk_hash"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "apk_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "AppRegistry",
+      "discriminator": [
+        199,
+        158,
+        94,
+        103,
+        136,
+        111,
+        87,
+        65
+      ]
+    },
+    {
+      "name": "CloneReport",
+      "discriminator": [
+        217,
+        77,
+        242,
+        1,
+        228,
+        130,
+        187,
+        125
+      ]
+    },
+    {
+      "name": "Developer",
+      "discriminator": [
+        114,
+        120,
+        215,
+        201,
+        25,
+        169,
+        43,
+        173
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "AppAlreadyRegistered",
+      "msg": "App hash already registered"
+    },
+    {
+      "code": 6001,
+      "name": "AppNotFound",
+      "msg": "App not found in registry"
+    },
+    {
+      "code": 6002,
+      "name": "Unauthorized",
+      "msg": "Unauthorized: you are not the developer of this app"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidHash",
+      "msg": "Invalid APK hash: must be 32 bytes"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidProof",
+      "msg": "Invalid ZK proof"
+    },
+    {
+      "code": 6005,
+      "name": "AppFlagged",
+      "msg": "App has been flagged as malicious"
+    },
+    {
+      "code": 6006,
+      "name": "NameTooLong",
+      "msg": "App name too long (max 64 chars)"
+    },
+    {
+      "code": 6007,
+      "name": "VersionTooLong",
+      "msg": "Version string too long (max 32 chars)"
+    }
+  ],
+  "types": [
+    {
+      "name": "AppRegistry",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "developer",
+            "type": "pubkey"
+          },
+          {
+            "name": "apk_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "app_name",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "is_active",
+            "type": "bool"
+          },
+          {
+            "name": "is_flagged",
+            "type": "bool"
+          },
+          {
+            "name": "verify_count",
+            "type": "u64"
+          },
+          {
+            "name": "signature",
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CloneReport",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "reporter",
+            "type": "pubkey"
+          },
+          {
+            "name": "reported_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "genuine_app",
+            "type": "pubkey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Developer",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "app_count",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
